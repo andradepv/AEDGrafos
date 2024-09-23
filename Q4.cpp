@@ -68,6 +68,7 @@ public:
         return adjacentes;
     }
 
+
     void printAdjMatrix() const {
         for (unsigned int i = 0; i < num_vertices; ++i) {
             for (unsigned int j = 0; j < num_vertices; ++j) {
