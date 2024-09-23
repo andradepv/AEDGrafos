@@ -1,8 +1,12 @@
 #include <iostream>
 #include <list>
+#include<cstdlib>
+#include<limits>
+#include <iomanip>
 
-
+typedef unsigned int uint;
 typedef unsigned int Vertex;
+typedef float Weight;
 
 class DigraphAL {
 private:
@@ -20,6 +24,17 @@ public:
         delete[] adj;
     }
 
+    uint get_num_vertices() { return num_vertices; }
+
+    uint get_num_edges() { return num_edges; }
+
+    std::list<Vertex> get_adj(Vertex v) { return adj[v]; };
+
+    void DigraphAL::remove_edge(Vertex u, Vertex v) {
+    adj[u].remove(v);
+    num_edges--;
+}
+
     void addEdge(Vertex u, Vertex v) {
         if (arestaExistente(u, v)) {
             adj[u].push_back(v); 
@@ -27,7 +42,7 @@ public:
         }
     }
 
-        bool arestaExistente(Vertex u, Vertex v) {
+    bool arestaExistente(Vertex u, Vertex v) {
         if (u != v) {
             for (const Vertex& existing_vertex : adj[u]) {
                 if (existing_vertex == v) {
@@ -37,11 +52,6 @@ public:
             return true;
         }
         return false;
-    }
-
-    void printGraphInfo() const {
-        std::cout << "num_vertices: " << num_vertices << "\n";
-        std::cout << "num_edges: " << num_edges << "\n";
     }
 
     void printAdjList() const {
@@ -68,7 +78,8 @@ int main() {
         graph.addEdge(u, v);
     }
 
-    graph.printGraphInfo();
+    std::cout << "num_vertices: " << graph.get_num_vertices() << "\n";
+    std::cout << "num_edges: " << graph.get_num_edges() << "\n";
     graph.printAdjList();
 
     return 0;

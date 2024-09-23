@@ -1,5 +1,8 @@
-#include<iostream>
-#include<list>
+#include <iostream>
+#include <list>
+#include<cstdlib>
+#include<limits>
+#include <iomanip>
 
 typedef unsigned int uint;
 typedef unsigned int Vertex;
@@ -9,10 +12,12 @@ private:
     uint num_vertices;
     uint num_edges;
     std::list<Vertex> *adj;
+
 public:
     GraphAL(uint num_vertices);
     ~GraphAL();
     void add_edge(Vertex u, Vertex v);
+    void remove_edge(Vertex u, Vertex v);
     std::list<Vertex> get_adj(Vertex v) { return adj[v]; };
     uint get_num_vertices() { return num_vertices; };
     uint get_num_edges() { return num_edges; };
@@ -38,8 +43,10 @@ void GraphAL::add_edge(Vertex u, Vertex v) {
     num_edges++;
 }
 
-uint get_num_vertices(){
-    return num_vertices;
+void GraphAL::remove_edge(Vertex u, Vertex v) {
+    adj[u].remove(v);
+    adj[v].remove(u);
+    num_edges--;
 }
 
 void print_list(std::list<Vertex> adj) {
@@ -55,7 +62,8 @@ void display_graph(GraphAL& g) {
         print_list(adj);
         std::cout << "\n";
     }
-}
+
+};
 
 int main() {
     uint num_vertices;
@@ -71,8 +79,8 @@ int main() {
         g.add_edge(a, b);
     }
 
-    std::cout << "num_vertices: " << num_vertices << "\n";
-    std::cout << "num_edges: " << num_edges << "\n";
+    std::cout << "num_vertices: " << g.get_num_vertices() << "\n";
+    std::cout << "num_edges: " << g.get_num_edges() << "\n";
     display_graph(g);
     return 0;
 }

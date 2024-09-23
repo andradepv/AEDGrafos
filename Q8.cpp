@@ -1,19 +1,26 @@
 #include <iostream>
+#include <list>
+#include<cstdlib>
+#include<limits>
 #include <iomanip>
-#include <limits>
 
 typedef unsigned int uint;
 typedef unsigned int Vertex;
 typedef float Weight;
 
-class WeightedGraphAM {
+class WeightedDigraphAM {
 private:
     unsigned int num_vertices;
     unsigned int num_edges;
     Weight** adj;
 
 public:
-    WeightedGraphAM(unsigned int num_vertices)
+
+    uint get_num_vertices() { return num_vertices; };
+
+    uint get_num_edges() { return num_edges; };
+
+    WeightedDigraphAM(unsigned int num_vertices)
         : num_vertices(num_vertices), num_edges(0) {
         
         adj = new Weight*[num_vertices];
@@ -29,7 +36,7 @@ public:
         }
     }
 
-    ~WeightedGraphAM() {
+    ~WeightedDigraphAM() {
         for (unsigned int i = 0; i < num_vertices; ++i) {
             delete[] adj[i];
         }
@@ -45,9 +52,27 @@ public:
 
     }
 
-    void printGraphInfo() const {
-        std::cout << "num_vertices: " << num_vertices << "\n";
-        std::cout << "num_edges: " << num_edges << "\n";
+    std::list<Vertex> get_adj(Vertex v) {
+        std::list<Vertex> adjacentes;
+        Weight inf = std::numeric_limits<Weight>::infinity();
+        for (unsigned int u = 0; u < num_vertices; ++u) {
+            if (adj[v][u] != inf) {
+                adjacentes.push_back(u);
+            }
+        }
+        return adjacentes;
+    }
+
+    Weight get_weight_edge(Vertex u, Vertex v) {
+        return adj[u][v];
+    }
+
+    void remove_edge(Vertex u, Vertex v) {
+        Weight inf = std::numeric_limits<Weight>::infinity();
+        if (adj[u][v] != inf) {
+            adj[u][v] = inf;
+            num_edges--;
+        }
     }
 
     void printAdjMatrix() const {
@@ -66,7 +91,7 @@ int main() {
     std::cin >> num_vertices;
     std::cin >> num_edges;
 
-    WeightedGraphAM graph(num_vertices);
+    WeightedDigraphAM graph(num_vertices);
 
     for (unsigned int i = 0; i < num_edges; ++i) {
         Vertex u, v;
@@ -75,7 +100,8 @@ int main() {
         graph.addEdge(u, v, w);
     }
 
-    graph.printGraphInfo();
+    std::cout << "num_vertices: " << graph.get_num_vertices() << "\n";
+    std::cout << "num_edges: " << graph.get_num_edges() << "\n";
     graph.printAdjMatrix();
 
     return 0;

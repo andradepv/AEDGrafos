@@ -1,7 +1,10 @@
 #include <iostream>
 #include <list>
+#include<cstdlib>
+#include<limits>
 #include <iomanip>
 
+typedef unsigned int uint;
 typedef unsigned int Vertex;
 typedef float Weight;
 
@@ -28,10 +31,30 @@ public:
         delete[] adj;
     }
 
+    uint get_num_vertices() { return num_vertices; }
+
+    uint get_num_edges() { return num_edges; }
+
     void addEdge(Vertex u, Vertex v, Weight w) {
         adj[u].emplace_back(v, w); 
         adj[v].emplace_back(u, w); 
         num_edges++;
+    }
+
+    void remove_edge(Vertex u, Vertex v) {
+        adj[u].remove_if([v](const VertexWeightPair& pair) {
+            return pair.vertex == v;
+        });
+
+        adj[v].remove_if([u](const VertexWeightPair& pair) {
+            return pair.vertex == u;
+        });
+
+        num_edges--;
+    }
+
+    std::list<VertexWeightPair> get_adj(Vertex u) {
+        return adj[u];
     }
 
     void printAdjList() const {
@@ -44,10 +67,6 @@ public:
         }
     }
 
-    void printGraphInfo() const {
-        std::cout << "num_vertices: " << num_vertices << "\n";
-        std::cout << "num_edges: " << num_edges << "\n";
-    }
 };
 
 int main() {
@@ -64,7 +83,8 @@ int main() {
         graph.addEdge(u, v, w);
     }
 
-    graph.printGraphInfo();
+    std::cout << "num_vertices: " << graph.get_num_vertices() << "\n";
+    std::cout << "num_edges: " << graph.get_num_edges() << "\n";
 
     graph.printAdjList();
 

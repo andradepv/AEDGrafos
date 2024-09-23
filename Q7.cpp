@@ -1,9 +1,12 @@
 #include <iostream>
 #include <list>
+#include<cstdlib>
+#include<limits>
 #include <iomanip>
 
+typedef unsigned int uint;
 typedef unsigned int Vertex;
-typedef float Weight;
+typedef unsigned int Weight;
 
 class VertexWeightPair {
 public:
@@ -20,12 +23,34 @@ private:
     std::list<VertexWeightPair>* adj;
 
 public:
+
+    uint get_num_vertices() { return num_vertices; };
+
+    uint get_num_edges() { return num_edges; };
+
     WeightedDigraphAL(unsigned int num_vertices) : num_vertices(num_vertices), num_edges(0) {
         adj = new std::list<VertexWeightPair>[num_vertices];
     }
 
     ~WeightedDigraphAL() {
         delete[] adj;
+    }
+
+    std::list<VertexWeightPair> get_adj(Vertex u) {
+        if (u < num_vertices) {
+            return adj[u];
+        }
+        return std::list<VertexWeightPair>();
+    }
+
+    void remove_edge(Vertex u, Vertex v) {
+        for (auto it = adj[u].begin(); it != adj[u].end(); ++it) {
+            if (it->vertex == v) {  
+                adj[u].erase(it);   
+                num_edges--;        
+                break;
+            }
+        }
     }
 
     void addEdge(Vertex u, Vertex v, Weight w) {
@@ -41,11 +66,6 @@ public:
             }
             std::cout << "\n";
         }
-    }
-
-    void printGraphInfo() const {
-        std::cout << "num_vertices: " << num_vertices << "\n";
-        std::cout << "num_edges: " << num_edges << "\n";
     }
 };
 
@@ -63,8 +83,8 @@ int main() {
         graph.addEdge(u, v, w);
     }
 
-    graph.printGraphInfo();
-
+    std::cout << "num_vertices: " << graph.get_num_vertices() << "\n";
+    std::cout << "num_edges: " << graph.get_num_edges() << "\n";
     graph.printAdjList();
 
     return 0;

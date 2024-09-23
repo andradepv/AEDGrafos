@@ -1,6 +1,8 @@
 #include <iostream>
+#include <list>
+#include<cstdlib>
+#include<limits>
 #include <iomanip>
-#include <limits>
 
 typedef unsigned int uint;
 typedef unsigned int Vertex;
@@ -29,6 +31,12 @@ public:
         }
     }
 
+    Weight get_weight_edge(Vertex u, Vertex v){ return adj[u][v]; }
+    
+    uint get_num_vertices() { return num_vertices; }
+
+    uint get_num_edges() { return num_edges; }
+
     ~WeightedGraphAM() {
         for (unsigned int i = 0; i < num_vertices; ++i) {
             delete[] adj[i];
@@ -46,9 +54,18 @@ public:
 
     }
 
-    void printGraphInfo() const {
-        std::cout << "num_vertices: " << num_vertices << "\n";
-        std::cout << "num_edges: " << num_edges << "\n";
+    std::list<Vertex> get_adj(Vertex v) {
+        
+        std::list<Vertex> adjacentes;
+        if (v < num_vertices) {
+            for (Vertex u = 0; u < num_vertices; ++u) {
+                if (adj[v][u] != 0) {
+                    adjacentes.push_back(u);
+                }
+            }
+        }
+
+        return adjacentes;
     }
 
     void printAdjMatrix() const {
@@ -76,7 +93,8 @@ int main() {
         graph.addEdge(u, v, w);
     }
 
-    graph.printGraphInfo();
+    std::cout << "num_vertices: " << graph.get_num_vertices() << "\n";
+    std::cout << "num_edges: " << graph.get_num_edges() << "\n";
     graph.printAdjMatrix();
 
     return 0;
